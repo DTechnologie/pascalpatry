@@ -89,6 +89,158 @@
 
     .nav-cta:hover { background: var(--teal-dark) !important; }
 
+    /* ─── HAMBURGER ─── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      margin-left: 12px;
+      z-index: 201;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile / tablet overlay menu */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 72px 0 0 0;
+      background: var(--navy);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      z-index: 200;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+
+    .mobile-nav a:hover { color: var(--teal); }
+
+    .mobile-nav .nav-cta {
+      background: var(--teal) !important;
+      color: var(--white) !important;
+      padding: 12px 32px;
+      border-radius: 4px;
+    }
+
+    /* ─── POPUP VIE PRIVÉE (Loi 25) ─── */
+    #privacy-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 9000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0 0 0 0;
+    }
+
+    #privacy-overlay.hidden { display: none; }
+
+    #privacy-box {
+      background: var(--white);
+      width: 100%;
+      max-width: 780px;
+      border-radius: 12px 12px 0 0;
+      padding: 32px 40px 36px;
+      box-shadow: 0 -8px 40px rgba(0,0,0,.18);
+      position: relative;
+    }
+
+    #privacy-box h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #privacy-box p {
+      font-size: .88rem;
+      color: var(--steel);
+      line-height: 1.65;
+      margin-bottom: 6px;
+    }
+
+    #privacy-box a {
+      color: var(--teal);
+      text-decoration: underline;
+    }
+
+    .privacy-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-accept {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      padding: 11px 28px;
+      border-radius: 4px;
+      font-family: 'Barlow', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .btn-accept:hover { background: var(--teal-dark); }
+
+    .btn-refuse {
+      background: transparent;
+      color: var(--steel);
+      border: 1px solid #cbd5e0;
+      padding: 11px 28px;
+      border-radius: 4px;
+      font-family: 'Barlow', sans-serif;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+
+    .btn-refuse:hover { border-color: var(--navy); color: var(--navy); }
+
+    @media (max-width: 600px) {
+      #privacy-box { padding: 24px 20px 28px; }
+      .privacy-actions { flex-direction: column; }
+      .btn-accept, .btn-refuse { width: 100%; text-align: center; }
+    }
+
     /* ─── HERO ─── */
     .hero {
       background: var(--navy);
@@ -825,11 +977,16 @@
     footer strong { color: rgba(255,255,255,.75); }
 
     /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .hamburger { display: flex; }
+      nav a:not(.nav-cta) { display: none; }
+      .nav-cta { display: none; }
+    }
+
     @media (max-width: 800px) {
       .hero { grid-template-columns: 1fr; gap: 40px; }
       .why-grid { grid-template-columns: 1fr; }
       .contact-cards { grid-template-columns: 1fr; }
-      nav a:not(.nav-cta) { display: none; }
     }
   </style>
 </head>
@@ -845,7 +1002,17 @@
     <a href="#pourquoi">À propos</a>
     <a href="#contact" class="nav-cta">Nous joindre</a>
   </nav>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Ouvrir le menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- ── MOBILE NAV ── -->
+<nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+  <a href="#services" class="mobile-nav-link">Services</a>
+  <a href="#pourquoi" class="mobile-nav-link">À propos</a>
+  <a href="#contact" class="nav-cta mobile-nav-link">Nous joindre</a>
+</nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
@@ -1051,18 +1218,6 @@
         <p class="avis-text">« Travail impeccable! Pascal faisait certain que chaque réparation allait durer le plus longtemps possible. En plus qu'il a une bonne tête sur les épaules, il est très sympathique. »</p>
       </div>
 
-      <div class="avis-card">
-        <div class="avis-header">
-          <div class="avis-avatar" style="background:#5a3e8a;">F</div>
-          <div class="avis-meta">
-            <div class="avis-name">Michael Coleman</div>
-            <div class="avis-date">Il y a 5 mois</div>
-          </div>
-        </div>
-        <div class="avis-stars">★★★★★</div>
-        <p class="avis-text">« Fantastic service! Pascal helped my parents through a severe blocking that required city services. He also helped them put together everything needed to have it covered by the city. We would work with Pascal in a heartbeat! »</p>
-      </div>
-
     </div>
   </div>
 
@@ -1152,6 +1307,75 @@ document.getElementById('contactForm').addEventListener('submit', async function
     alert('Erreur de connexion.');
   }
 });
+</script>
+
+<script>
+/* ── Hamburger menu ── */
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileNav = document.getElementById('mobileNav');
+
+hamburgerBtn.addEventListener('click', () => {
+  const isOpen = mobileNav.classList.toggle('open');
+  hamburgerBtn.classList.toggle('open', isOpen);
+  hamburgerBtn.setAttribute('aria-expanded', isOpen);
+  mobileNav.setAttribute('aria-hidden', !isOpen);
+});
+
+document.querySelectorAll('.mobile-nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileNav.classList.remove('open');
+    hamburgerBtn.classList.remove('open');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    mobileNav.setAttribute('aria-hidden', 'true');
+  });
+});
+</script>
+
+<!-- ── POPUP PROTECTION VIE PRIVÉE (Loi 25) ── -->
+<div id="privacy-overlay" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+  <div id="privacy-box">
+    <h2 id="privacy-title">🔒 Protection de vos renseignements personnels</h2>
+    <p>
+      Conformément à la <strong>Loi 25 sur la protection des renseignements personnels dans le secteur privé</strong> (Québec),
+      nous vous informons que ce site collecte des renseignements personnels (nom, courriel, numéro de téléphone)
+      uniquement dans le cadre de votre demande de service.
+    </p>
+    <p>
+      Ces données sont utilisées exclusivement pour vous contacter et traiter votre demande.
+      Elles ne sont jamais vendues ni partagées avec des tiers à des fins commerciales.
+      Vous avez le droit d'accéder à vos renseignements, de les corriger ou d'en demander la suppression en nous
+      écrivant à <a href="mailto:pascal.patry@example.com">pascal.patry@example.com</a>.
+    </p>
+    <p style="font-size:.82rem; color:#718096; margin-top:4px;">
+      En cliquant sur «&nbsp;Accepter&nbsp;», vous consentez à l'utilisation de ces renseignements à des fins de traitement de votre demande.
+    </p>
+    <div class="privacy-actions">
+      <button class="btn-accept" id="privacyAccept">Accepter</button>
+      <button class="btn-refuse" id="privacyRefuse">Refuser</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Privacy popup (Loi 25) ── */
+(function () {
+  const overlay = document.getElementById('privacy-overlay');
+  const accept  = document.getElementById('privacyAccept');
+  const refuse  = document.getElementById('privacyRefuse');
+
+  if (localStorage.getItem('privacyConsent')) {
+    overlay.classList.add('hidden');
+    return;
+  }
+
+  function closePopup(choice) {
+    localStorage.setItem('privacyConsent', choice);
+    overlay.classList.add('hidden');
+  }
+
+  accept.addEventListener('click', () => closePopup('accepted'));
+  refuse.addEventListener('click', () => closePopup('refused'));
+})();
 </script>
 
 </body>
