@@ -1253,6 +1253,7 @@
         </div>
         <input type="email" id="cf-email" placeholder="Votre courriel" required />
         <textarea id="cf-msg" placeholder="Décrivez votre problème en quelques mots..." rows="4" required></textarea>
+        <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off" />
         <button type="submit" class="cf-btn">Envoyer le message</button>
       </form>
       <div id="cf-success" style="display:none;text-align:center;padding:40px 0;">
@@ -1283,6 +1284,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
   btn.disabled = true;
   const formData = new FormData();
   formData.append('access_key', '5e8d86ec-ce42-4651-a236-b67d23e4536f');
+  formData.append('botcheck', this.querySelector('[name="botcheck"]').checked);
   formData.append('subject', 'Nouveau message du site web — Plomberie Pascal Patry');
   formData.append('name', document.getElementById('cf-nom').value);
   formData.append('phone', document.getElementById('cf-tel').value);
