@@ -254,6 +254,7 @@
       align-items: center;
       position: relative;
       overflow: hidden;
+      isolation: isolate;
     }
 
     .hero::before {
@@ -295,6 +296,60 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: .4; transform: scale(1.4); }
+    }
+
+    /* ─── HERO : TEXTURE + GOUTTES ─── */
+
+    /* Texture eau — photo Unsplash (licence libre) */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1709990742217-cd21721a2afc?auto=format&fit=crop&w=1600&q=50');
+      background-size: cover;
+      background-position: center;
+      opacity: .25;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Conteneur des gouttes */
+    .hero-drops {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    /* Goutte individuelle — ovale bleu, s'étire en tombant */
+    .drop {
+      position: absolute;
+      left: var(--x);
+      top: -28px;
+      width: var(--w, 6px);
+      height: calc(var(--w, 6px) * 2);
+      background: radial-gradient(ellipse at 45% 38%,
+        rgba(0,160,210,var(--op,.22)) 0%,
+        rgba(0,110,170,calc(var(--op,.22) * 0.5)) 55%,
+        transparent 100%
+      );
+      border-radius: 50%;
+      animation: dropFall var(--dur,10s) var(--delay,0s) ease-in infinite;
+      will-change: transform;
+    }
+
+    @keyframes dropFall {
+      0%   { transform: translateY(0)     scaleY(1);    opacity: 0;   }
+      7%   {                                            opacity: 1;   }
+      70%  { transform: translateY(420px) scaleY(1.10);               }
+      90%  { transform: translateY(640px) scaleY(1.14); opacity: .55; }
+      100% { transform: translateY(720px) scaleY(1.15); opacity: 0;   }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .drop { animation: none; opacity: 0; }
     }
 
     .hero h1 {
@@ -562,6 +617,35 @@
 
     .why-section .section-title { color: var(--white); }
     .why-section .section-sub { color: rgba(255,255,255,.6); }
+
+    .about-pascal {
+      max-width: 780px;
+      margin: 56px auto 0;
+      padding-top: 44px;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .about-pascal-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+    .about-pascal p {
+      color: rgba(255,255,255,.72);
+      font-size: .97rem;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+    .about-pascal p:last-of-type { margin-bottom: 0; }
+    .about-pascal-sig {
+      margin-top: 22px;
+      font-size: .85rem;
+      color: rgba(255,255,255,.45);
+      font-style: italic;
+    }
 
     .why-list {
       list-style: none;
@@ -993,6 +1077,50 @@
 
     footer strong { color: rgba(255,255,255,.75); }
 
+    .footer-rbq {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .footer-logos {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-logo {
+      height: 38px;
+      width: auto;
+      opacity: .65;
+      filter: brightness(0) invert(1);
+      transition: opacity .2s;
+    }
+    .footer-logos a:hover .footer-logo { opacity: 1; }
+    .footer-rbq-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.3;
+    }
+    .rbq-label {
+      font-size: .7rem;
+      color: rgba(255,255,255,.45);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .rbq-number {
+      font-size: .88rem;
+      color: rgba(255,255,255,.75);
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+    @media (max-width: 480px) {
+      .footer-rbq { flex-direction: column; gap: 10px; }
+      .footer-rbq-info { align-items: center; }
+    }
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1024px) {
       .hamburger { display: flex; }
@@ -1033,6 +1161,7 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
+  <div class="hero-drops" aria-hidden="true"></div>
   <div>
     <div class="hero-badge">Plombier certifié CMMTQ · Gatineau</div>
     <h1>Résidentiel,<br>commercial,<br><em>&amp; urgences 24/7</em></h1>
@@ -1134,6 +1263,14 @@
         <div class="stat-label">Certification officielle</div>
       </div>
     </div>
+  </div>
+
+  <div class="about-pascal">
+    <div class="about-pascal-label">À propos</div>
+    <p>Chez Plomberie Pascal Patry, chaque projet est réalisé avec professionnalisme, transparence et souci du travail bien fait. Fort de plus de 20 ans d'expérience à titre d'entrepreneur et de plus de 15 ans comme plombier, Pascal Patry met son expertise au service de ses clients pour offrir des solutions durables, efficaces et adaptées à chaque besoin.</p>
+    <p>Que ce soit pour des travaux résidentiels, commerciaux ou des rénovations, l'entreprise se distingue par son approche humaine, son service personnalisé et la qualité de son exécution. Chez Plomberie Pascal Patry, la satisfaction du client est une priorité, et chaque intervention est effectuée avec rigueur, respect et attention aux détails.</p>
+    <p>Faire affaire avec Plomberie Pascal Patry, c'est choisir un partenaire de confiance pour tous vos besoins en plomberie.</p>
+    <div class="about-pascal-sig">— Pascal Patry, fondateur &amp; plombier</div>
   </div>
 </section>
 
@@ -1302,6 +1439,23 @@
 <footer>
   <strong>Plomberie Pascal Patry</strong> · <a href="https://www.cmmtq.org" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Membre certifié CMMTQ</a> · Gatineau, QC<br>
   © 2025 Plomberie Pascal Patry. Tous droits réservés.
+  <div class="footer-rbq">
+    <div class="footer-logos">
+      <a href="https://www.rbq.gouv.qc.ca/" target="_blank" rel="noopener noreferrer">
+        <img src="img/construction-1.png" alt="Régie du bâtiment du Québec" class="footer-logo">
+      </a>
+      <a href="https://www.cmmtq.org/" target="_blank" rel="noopener noreferrer">
+        <img src="img/construction-3.png" alt="CMMTQ" class="footer-logo">
+      </a>
+      <a href="https://www.ccq.org/" target="_blank" rel="noopener noreferrer">
+        <img src="img/construction-2.png" alt="Commission de la construction du Québec" class="footer-logo">
+      </a>
+    </div>
+    <div class="footer-rbq-info">
+      <span class="rbq-label">Licence RBQ</span>
+      <span class="rbq-number">5739-0734-01</span>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -1397,6 +1551,42 @@ document.querySelectorAll('.mobile-nav-link').forEach(link => {
 
   accept.addEventListener('click', () => closePopup('accepted'));
   refuse.addEventListener('click', () => closePopup('refused'));
+})();
+</script>
+
+<script>
+(function () {
+  var c = document.querySelector('.hero-drops');
+  if (!c) return;
+  // [left %, width px, duration s, delay s, opacity]
+  var drops = [
+    ['3%',  4,  11,  0,    .17],
+    ['8%',  7,  9,   1.8,  .23],
+    ['14%', 5,  13,  3.5,  .19],
+    ['20%', 9,  10,  0.4,  .25],
+    ['27%', 4,  14,  6.2,  .16],
+    ['33%', 6,  8,   2.7,  .22],
+    ['40%', 10, 12,  4.9,  .26],
+    ['47%', 5,  9,   1.1,  .18],
+    ['54%', 7,  11,  7.3,  .21],
+    ['60%', 4,  10,  0.7,  .17],
+    ['67%', 8,  13,  3.2,  .24],
+    ['73%', 5,  9,   5.6,  .19],
+    ['80%', 9,  11,  1.5,  .25],
+    ['87%', 4,  8,   4.1,  .16],
+    ['93%', 6,  12,  2.4,  .21],
+  ];
+  drops.forEach(function (d) {
+    var el = document.createElement('span');
+    el.className = 'drop';
+    el.style.cssText =
+      '--x:' + d[0] + ';' +
+      '--w:' + d[1] + 'px;' +
+      '--dur:' + d[2] + 's;' +
+      '--delay:' + d[3] + 's;' +
+      '--op:' + d[4];
+    c.appendChild(el);
+  });
 })();
 </script>
 
